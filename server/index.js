@@ -1,77 +1,68 @@
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
-const { GH_TOKEN } = require('../tokens.js');
-const { outfitData } = require('./clientOutfit.js');
+// const { GH_TOKEN } = require('../tokens.js');
+// const { outfitData } = require('./clientOutfit.js');
+const db = require('../db/index.js');
 
 const app = express();
 const PORT = 3000 || process.env.PORT;
-const URL = 'https://app-hrsei-api.herokuapp.com/api/fec2/hr-sfo';
-const HEADERS = { headers: { Authorization: GH_TOKEN } };
+// const PORT = 8080 || process.env.PORT;
+// const URL = 'https://app-hrsei-api.herokuapp.com/api/fec2/hr-sfo';
+// const HEADERS = { headers: { Authorization: GH_TOKEN } };
 
-app.use(express.static('../../Loungeo/client'));
+// app.use(express.static('../../Loungeo/client'));
 app.use(express.json());
 app.use(cors());
 
-const customerOutfit = outfitData;
+// const customerOutfit = outfitData;
 
-// Products Service
-const productsRoutes = require('./products/routes.js');
 
-app.use('/products', productsRoutes);
+// // Questions Service
+// const questionsRoutes = require('./questions/routes.js');
 
-// Reviews Service
-const reviewsRoutes = require('./reviews/routes.js');
+// app.use('/qa', questionsRoutes);
 
-app.use('/reviews', reviewsRoutes);
+app.get('/questions/:id', (req, res) => {
+  const { id } = req.params;
+  const { count } = req.query;
+  // const url = `${URL}/qa/questions/?product_id=${id}`;
+  // const headers = { params: { count }, ...HEADERS };
+  const productId = id.split('&')[0];
 
-// Questions Service
-const questionsRoutes = require('./questions/routes.js');
+  console.log('## GET /qa/questions/:id - ', id, ' -> ', productId);
 
-app.use('/qa', questionsRoutes);
-
-// Atelier 1.0 Service
-
-app.get('/myoutfit', (req, res) => {
-  res.status(200).send(customerOutfit);
+  db.getQuestions( productId, (err, queryResults) => {
+    if (err) {
+      console.log('@@ err in /qa/questions/:id -', err);
+    } else {
+      console.log('Successful query! result is here ', queryResults.rows);
+      const myResults = { product_id: productId, results: queryResults.rows };
+      res.send(myResults);
+    }
+  });
 });
 
-app.post('/myoutfit/add', (req, res) => {
-  if (!customerOutfit[req.body.id]) {
-    customerOutfit[req.body.id] = req.body;
-    res.status(201);
-  } else {
-    res.status(400);
-  }
-});
 
-app.post('/myoutfit/delete', (req, res) => {
-  if (customerOutfit[req.body.id]) {
-    delete customerOutfit[req.body.id];
-    res.status(200);
-  } else {
-    res.status(400);
-  }
-});
-
-app.get('/cart', (req, res) => {
-  const url = `${URL}/cart`;
-
-  axios.get(url, HEADERS)
+app.put('/questions/:question_id/helpful', (req, res) => {
+  const url = `${qaURL}/qa/questions/${req.params.question_id}/helpful`;
+  axios
+    .put(url, null, HEADERS)
     .then((response) => {
       res.status(response.status).send(response.data);
     })
-    .catch((err) => {
-      res.status(err.response.status).send(err.response.data);
+    .catch((error) => {
+      res.send(error);
     });
 });
 
-app.post('/cart', (req, res) => {
-  const data = req.body;
+app.post('/:question_id/answers', (req, res) => {
+  const { body } = req;
   // eslint-disable-next-line camelcase
-  const url = `${URL}/cart`;
+  const url = `${qaURL}/qa/questions/${req.params.question_id}/answers`;
 
-  axios.post(url, data, HEADERS)
+  axios
+    .post(url, body, HEADERS)
     .then((response) => {
       res.status(response.status).send(response.data);
     })
@@ -80,6 +71,36 @@ app.post('/cart', (req, res) => {
     });
 });
 
+app.post('/questions', (req, res) => {
+  const { body } = req;
+  const url = `${qaURL}/qa/questions`;
+
+  axios
+    .post(url, body, HEADERS)
+    .then((response) => {
+      res.status(response.status).send(response);
+    })
+    .catch((error) => {
+      res.send(error);
+    });
+});
+
+app.get('/:question_id/answers', (req, res) => {
+  const url = `${qaURL}/qa/questions/${req.params.question_id}/answers`;
+
+  axios
+    .get(url, HEADERS)
+    .then((response) => {
+      const { results } = response.data;
+      res.status(response.status).send(results);
+    })
+    .catch((err) => {
+      res.status(err.response.status).send(err.response.data);
+    });
+});
+
+
+
 app.listen(PORT, () => {
-  // console.log('Server listening on port:', `${PORT}`);
+  console.log('Server listening on port:', `${PORT}`);
 });
