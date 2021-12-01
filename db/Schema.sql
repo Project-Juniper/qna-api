@@ -1,19 +1,16 @@
-
-\c sdc;
-
 DROP TABLE IF EXISTS questions CASCADE;
 DROP TABLE IF EXISTS answers_photos CASCADE;
 DROP TABLE IF EXISTS answers CASCADE;
 
-create table answers_photos (
-  id SERIAL NOT NULL,
-  answer_id INTEGER NOT NULL,
+CREATE TABLE answers_photos (
+  id serial NOT NULL, 
+  answer_id INTEGER NOT NULL, 
   url VARCHAR(255) NULL DEFAULT NULL,
   PRIMARY KEY (id)
 );
 
-create table answers (
-  id SERIAL NOT NULL,
+CREATE TABLE answers (
+  id serial NOT NULL,
   question_id INTEGER NOT NULL,
   body VARCHAR(1024) NULL DEFAULT NULL,
   date_written BIGINT,
@@ -24,8 +21,8 @@ create table answers (
   PRIMARY KEY (id)
 );
 
-create table questions (
-  id SERIAL NOT NULL,
+CREATE TABLE questions (
+  id serial NOT NULL,
   product_id INTEGER NOT NULL,
   body VARCHAR(1024) NULL DEFAULT NULL,
   date_written BIGINT,

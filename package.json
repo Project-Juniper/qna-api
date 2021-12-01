@@ -1,0 +1,82 @@
+{
+  "name": "loungeo",
+  "version": "1.0.0",
+  "description": "Model ecommerce webapp.",
+  "main": "index.js",
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.36",
+    "@fortawesome/free-solid-svg-icons": "^5.15.4",
+    "@fortawesome/react-fontawesome": "^0.1.16",
+    "axios": "^0.24.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "moment": "^2.29.1",
+    "pg": "^8.7.1",
+    "prop-types": "^15.7.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-items-carousel": "^2.8.0",
+    "styled-components": "^5.3.3"
+  },
+  "scripts": {
+    "start": "nodemon server/index.js",
+    "dev": "webpack --config webpack.config.js --watch --mode=development",
+    "build-client": "webpack",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/QNK-Industries/Loungeo.git"
+  },
+  "author": "Quinton Maki, Noah Lehman, Khai Tran",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/QNK-Industries/Loungeo/issues"
+  },
+  "homepage": "https://github.com/QNK-Industries/Loungeo#readme",
+  "devDependencies": {
+    "@babel/core": "^7.15.8",
+    "@babel/plugin-transform-runtime": "^7.16.0",
+    "@babel/preset-env": "^7.16.0",
+    "@babel/preset-react": "^7.16.0",
+    "@jest/globals": "^27.3.1",
+    "@svgr/webpack": "^5.5.0",
+    "@testing-library/jest-dom": "^5.15.0",
+    "@testing-library/react": "^12.1.2",
+    "babel-jest": "^27.3.1",
+    "babel-loader": "^8.2.3",
+    "babel-plugin-styled-components": "^1.13.3",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-jest": "^25.2.2",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.26.1",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.5.0",
+    "jest": "^27.3.1",
+    "msw": "^0.35.0",
+    "nodemon": "^2.0.14",
+    "react-test-renderer": "^17.0.2",
+    "svg-url-loader": "^7.1.1",
+    "webpack": "^5.60.0",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.4.0"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react"
+    ]
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "setupFilesAfterEnv": [
+      "<rootDir>/client/src/setupTests.js"
+    ],
+    "modulePathIgnorePatterns": [
+      "<rootDir>/client/Overview/components/ZoomedView.jsx"
+    ]
+  }
+}
