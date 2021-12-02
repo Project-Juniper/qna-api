@@ -23,7 +23,7 @@ app.use(cors());
 
 // app.use('/qa', questionsRoutes);
 
-app.get('/questions/:id', (req, res) => {
+app.get('/qa/questions/:id', (req, res) => {
   const { id } = req.params;
   const { count } = req.query;
   // const url = `${URL}/qa/questions/?product_id=${id}`;
@@ -88,6 +88,19 @@ app.post('/questions', (req, res) => {
 app.get('/:question_id/answers', (req, res) => {
   const url = `${qaURL}/qa/questions/${req.params.question_id}/answers`;
 
+  db.getAnswers ( req.params.question_id, (err, results)=> {
+    if (err) {
+      console.log('err in the answers get', err)
+    } else {
+      console.log('Successful Answers Query! results is', results)
+      const AnswerResults = {
+        question: question_id,
+        results : results.rows,
+      };
+      res.send(AnswerResults)
+    }
+  })
+
   axios
     .get(url, HEADERS)
     .then((response) => {
@@ -104,3 +117,4 @@ app.get('/:question_id/answers', (req, res) => {
 app.listen(PORT, () => {
   console.log('Server listening on port:', `${PORT}`);
 });
+

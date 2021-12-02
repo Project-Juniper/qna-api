@@ -68,6 +68,27 @@ module.exports = {
       });
   },
 
+
+
+  getAnswers: (question_id, callback) => {
+    const answerQuery = `
+      SELECT *
+      FROM answers
+      WHERE question_id = ${question_id}
+    `;
+
+    client.query(answerQuery)
+    .then((res) => {
+      callback(null, res)
+    })
+    .catch((err) => {
+      console.log('There is an error getting answers', err);
+      callback(err, 500)
+    })
+
+  },
+
+
   // getAnswers: () => {
 
   // }
